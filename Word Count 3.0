@@ -1,0 +1,190 @@
+/***********************************************
+*                                              *   
+*   Software Engineering Assignment_1                *
+*   Wordcount 3.0                                    *
+*   Updated by Shi Liyu_2018.4.19                    *
+*	Function:                                        *
+*	 (input)  wc.exe [parameter] [file_name]         *
+*	 (output) wc.exe -c file.txt: char count         *
+*		      wc.exe -w file.txt: word count         *
+*		      wc.exe -l file.txt: line count         *
+*		      wc.exe -a file.txt: annotation count   *
+*                                                    *
+******************************************************/
+/*对输入纯英文文本的说明：规范的英文文本，将文本内容拷贝至office word 中时不会出现红色波浪下划线*/
+
+#include<iostream>
+#include<fstream> 
+#include<string>
+#include<cctype>
+using namespace std;
+
+int charc(string line, int charcount);
+int wordc(string lin, int wordcount);
+int sentencec(string line, int sentencecount);
+int ac(string line, int annotationCount, int *judgeA);
+/**************************************************************
+*    charc: 数字符数 
+*    wordc: 数单词数
+*           判断标准：单词后为非字母（认为it's 是两个单词）
+*    sentencec:数句子数 
+*              判断标准：以.\!\?结尾，且，标点符号后面为非字母
+              （在office中英文文本，标点符号后若还有字母则需要空格） 
+**************************************************************/
+
+
+int main()
+{
+	ifstream inFile;
+	string filename;                                    //定义_文件名
+	string fuc,line;                                      //定义_功能名称\单次输入一行变量名
+	cout << "wc.exe ";                                    //输出提示文字_wc.exe
+	while (cin >> fuc)			                          //输入功能名称，按条件判断进入功能模块
+	{
+		int wordcount = 0;
+		int sentencecount = 0; 
+		int charcount = 0;
+		int annotationCount = 0,judgeA=0;
+		cin >> filename;                                  //输入要处理的文件名称（文件应当与程序在同一文件夹中）
+		inFile.open(filename.c_str(), ios::in);
+		if (!inFile)                                      //如果文件打开失败，输出 EXEC failure
+		{
+			cout << "EXEC failure" << endl;               
+		}
+		else                                               //按功能进行跳转
+		{
+			if (fuc == "-c")								
+			{
+				while (getline(inFile, line))
+				{
+					charcount=charc(line, charcount);
+				}
+				cout << "Letter: " << charcount << endl;
+			}
+			else if (fuc == "-w")
+			{
+				while (getline(inFile, line))
+				{
+					wordcount=wordc(line, wordcount);
+				}
+				cout << "Word: " << wordcount << endl;
+			}
+			else if (fuc == "-s")
+			{
+				while (getline(inFile, line))
+				{
+ 					sentencecount = sentencec(line, sentencecount);
+				}
+				cout << "Sentence: " << sentencecount << endl;
+			}     
+			else if (fuc == "-a")
+			{
+				while (getline(inFile, line))
+				{
+					annotationCount = ac(line, annotationCount, &judgeA);//用指针实现函数返回两个值
+				}
+				cout << "Annotation:" << annotationCount << endl;
+			}
+                                              //如果输入功能参数错误，则输出查无此功能
+			else cout << "There is no function called " << "\""<<fuc<< "\"" << endl;
+		}
+		inFile.close();
+		cout << "wc.exe ";                        //结束一次任务之后输出 wc.exe 准备下一次运行
+	}
+	return 0;
+}
+
+/********************函数*****************/
+int charc(string line, int charcount)
+{
+	int length;
+	length = line.size();
+	charcount=charcount+length;
+	return charcount;
+}
+
+int wordc(string line, int wordcount)
+{
+	int length,judge=0;
+	length = line.size();
+	for (int i = 0; i<length; i++)
+	{
+		if (isalpha(line[i]) && judge==0)
+		{
+			wordcount++;
+			judge = 1;
+		}
+		if (!isalpha(line[i]) && judge == 1)
+		{
+			judge = 0;
+		}
+	}
+	return wordcount;
+}
+
+int sentencec(string line, int sentencecount)
+{
+	int length,judge;
+	length = line.size();
+	judge = 0;
+	string s1 = ".";
+	string s2 = "!";
+	string s3 = "?";
+	for (int i = 0; i < length; i++)
+	{
+		if (isalpha(line[i + 1]) ||
+			!(line.compare(i+1, 1, s1)) || 
+			!(line.compare(i+1, 1, s2)) || 
+			!(line.compare(i+1, 1, s3)))
+		{
+			judge = 1;
+		}
+		else judge = 0;
+		if ((!(line.compare(i,1,s1)) || 
+			!(line.compare(i, 1, s2)) || 
+			!(line.compare(i, 1, s3))) && 
+			judge==0)
+		{
+			sentencecount++;
+			judge = 0;
+		}
+	}
+	return sentencecount;
+}
+
+int ac(string line, int annotationCount, int *judgeA)
+{
+	int length = line.size();
+	int judgeB = 0, judgeC = 0;
+	string s1 = "/";
+	string s2 = "*";
+	for (int i = 0; i < length; i++)
+	{
+		if (!(line.compare(i, 1, s1)) &&    //通过比较判断是否出现注释的标识符
+			!(line.compare(i + 1, 1, s2)))
+		{
+			*judgeA = 1;
+		}
+
+		if (!(line.compare(i, 1, s2)) &&
+			!(line.compare(i + 1, 1, s1)))
+		{
+			judgeB = 1;
+			*judgeA = 0;
+		}
+		/*如果检测到注释多行注释的前标志A=1
+		如果检测到多行注释的后标志A=0，B=1*/
+		if (!(line.compare(i + 1, 1, s1)) &&
+			!(line.compare(i + 2, 1, s1)))
+		{
+			judgeC = 1;
+		}
+		//如果检测到单行注释，judgeC=1
+	}
+	if (*judgeA == 1 || (judgeB == 1 && *judgeA == 0) || judgeC == 1)
+	{
+		annotationCount++;
+	}
+	/*A=1，计数多行注释的首行和中间行；A=0，B=1计数多行注释的末行；C=1计数单行注释*/
+	return annotationCount;
+}
