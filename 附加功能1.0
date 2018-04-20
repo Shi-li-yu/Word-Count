@@ -1,0 +1,80 @@
+/*****************************************
+*                                        *
+*  扩展功能1.0-数代码的注释行数              *
+*  Written by Shi Liyu_2018.4.19         *
+*   Input: wc.exe -a file.txt            *
+*   Output: Annotation: annotationcout   *
+*                                        *
+******************************************/
+
+#include<iostream>
+#include<fstream>
+#include<string>
+#include<cctype>
+using namespace std;
+
+int ac(string line, int annotationCount,int *judgeA);
+
+int main()
+{
+	ifstream inFile;
+	string filename;                                    //定义_文件名
+	string fuc, line;                                      //定义_功能名称\单次输入一行变量名
+	cout << "wc.exe ";                                    //输出提示文字_wc.exe
+	while (cin >> fuc)
+	{
+		int annotationCount=0;
+		int judgeA = 0;
+		cin >> filename;
+		inFile.open(filename.c_str(), ios::in);
+		if (fuc == "-a")
+		{
+			while (getline(inFile, line))
+			{
+			   annotationCount=ac(line, annotationCount,&judgeA);//用指针实现函数返回两个值
+			}
+		    cout << "Annotation:" << annotationCount << endl;
+		}
+		
+		inFile.close();
+		cout << "wc.exe";
+	}
+	return 0;
+}
+
+int ac(string line, int annotationCount,int *judgeA)
+{
+	int length = line.size();
+	int judgeB = 0, judgeC = 0;
+	string s1 = "/";
+	string s2 = "*";
+	for (int i = 0; i < length; i++)
+	{
+		if (!(line.compare(i, 1, s1)) &&    //通过比较判断是否出现注释的标识符
+			!(line.compare(i+1,1,s2)))
+		{
+			*judgeA = 1;
+		}
+		
+		if (!(line.compare(i, 1, s2)) &&          
+			!(line.compare(i+1, 1, s1)))
+		{
+			judgeB = 1;
+			*judgeA = 0;
+		}
+		/*如果检测到注释多行注释的前标志A=1
+		如果检测到多行注释的后标志A=0，B=1*/
+		if (!(line.compare(i + 1, 1, s1)) && 
+			!(line.compare(i + 2, 1, s1)))
+		{
+			judgeC=1;
+		}
+		//如果检测到单行注释，judgeC=1
+	}
+	if (*judgeA == 1 || (judgeB == 1 && *judgeA == 0) || judgeC == 1)
+	{
+		annotationCount++;
+	}
+	/*A=1，计数多行注释的首行和中间行；A=0，B=1计数多行注释的末行；C=1计数单行注释*/
+	return annotationCount;
+}
