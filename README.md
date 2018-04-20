@@ -10,11 +10,12 @@ Word Count 1.0 能够统计纯英文 txt 文件的字符数、单词数和行数
  
 (注：文件应为纯英文文本文件，文本文件与应用程序文件应放在同一目录下)
 ### 功能列表
-1. -c : char count
-2. -w : word count
-3. -s : sentence count
-4. 输入的文件名错误或文件不存在时：输出EXEC failure
-5. 输入的[parameter]不存在时：输出There is no function called "   "
+1. -c : char count(数字符数)
+2. -w : word count（数单词数）
+3. -s : sentence count（数句子数）
+4. -a : annotation count（数代码注释行数）
+5. 输入的文件名错误或文件不存在时：输出EXEC failure
+6. 输入的[parameter]不存在时：输出There is no function called "   "
 
 #文件列表
 
