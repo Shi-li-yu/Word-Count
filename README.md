@@ -18,6 +18,9 @@ Word Count 1.0 能够统计纯英文 txt 文件的字符数、单词数和行数
 6. 输入的[parameter]不存在时：输出There is no function called "   "
 
 #文件列表
+1. 项目文件：WordCount.vcxproj
+2. 例程所用的文本文件：![](https://i.imgur.com/NNMSiFV.png)
+3. 应用程序WordCount.exe
 
 #例程运行&结果
 
