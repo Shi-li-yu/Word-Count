@@ -17,9 +17,9 @@ Word Count 1.0 能够统计纯英文 txt 文件的字符数、单词数和行数
 4. 输入的文件名错误或文件不存在时：输出EXEC failure
 5. 输入的[parameter]不存在时：输出There is no function called "   "
 
-##文件列表
+## 文件列表
 
-##例程运行&结果
+## 例程运行&结果
 
 
 
@@ -35,3 +35,7 @@ Word Count 1.0 能够统计纯英文 txt 文件的字符数、单词数和行数
 
 - 输入的文件不存在或文件名错误时（打不开文件）
 ![](https://i.imgur.com/EoFTxc0.png)
+- 附加功能输入的文本内容为代码，计数代码注释行（输入文件内容为，分支程序：附加功能1.0的文本）
+![](https://i.imgur.com/OrIgVrm.png)
+![](https://i.imgur.com/wFXfbIa.png)
+![](https://i.imgur.com/N4ML0fU.png)
